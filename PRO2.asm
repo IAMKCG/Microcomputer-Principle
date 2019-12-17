@@ -1,0 +1,37 @@
+NAME	PROG2
+STACK  SEGMENT  STACK
+    	STA  DB  150  DUP (?)
+    	TOP  EQU  LENGTH  STA
+STACK  ENDS
+;
+DATA SEGMENT
+       MYSTRING  DB  'AAAAXXBBBB1234ABBA'
+       BUF DW 0080H
+       ORG BUF
+DATA  ENDS
+
+CODE  SEGMENT
+     	ASSUME  CS:CODE,DS:DATA,ES:DATA,SS:STACK
+START:	MOV  AX,DATA
+        MOV  DS,AX
+        MOV  AX,STACK
+        MOV  SS,AX
+        MOV  SP,TOP
+	MOV  SI,OFFSET MYSTRING
+	MOV  CX,18					
+NEXTWORK:                                                           
+	MOV  AL,'A'
+	CMP  [SI],AL
+	JNZ  DISPLAY
+	MOV  BYTE PTR [SI],'B'       			
+DISPLAY:
+	MOV  DL,[SI] 
+	MOV  AH,2 
+	INT  21H
+	INC  SI
+	DEC  CX
+	JNZ  NEXTWORK
+MOV  AH,4CH
+INT  21H
+CODE  	ENDS
+END   	START
